@@ -107,19 +107,22 @@ const LeadUploadForm: React.FC<LeadUploadFormProps> = ({ onLeadsParsed = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div {...getRootProps()} className="border-2 border-dashed rounded p-8 text-center cursor-pointer">
+    <div className="bg-card rounded-card shadow-card p-6 md:p-8 space-y-6">
+      <div
+        {...getRootProps()}
+        className="border-2 border-dashed border-primary/30 rounded-xl p-8 text-center cursor-pointer bg-background hover:border-primary transition-colors duration-200"
+      >
         <input {...getInputProps()} />
         {isDragActive ? (
-          <p>Drop the CSV file here ...</p>
+          <p className="text-primary font-semibold">Drop the CSV file here ...</p>
         ) : (
-          <p>Drag 'n' drop a CSV file here, or click to select file</p>
+          <p className="text-gray-700">Drag & drop a CSV file here, or <span className="text-primary underline">click to select</span></p>
         )}
         {fileName && <p className="mt-2 text-sm text-gray-500">Selected file: {fileName}</p>}
       </div>
       {errors.length > 0 && (
-        <div className="text-red-600">
-          <ul>
+        <div className="text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+          <ul className="text-left text-sm space-y-1">
             {errors.map((err, i) => (
               <li key={i}>{err}</li>
             ))}
@@ -127,12 +130,12 @@ const LeadUploadForm: React.FC<LeadUploadFormProps> = ({ onLeadsParsed = () => {
         </div>
       )}
       {leads.length > 0 && (
-        <div>
-          <h3 className="font-semibold mb-2">CSV Preview ({leads.length} leads)</h3>
+        <div className="bg-background rounded-xl shadow-card p-4">
+          <h3 className="font-semibold mb-2 text-lg text-primary">CSV Preview ({leads.length} leads)</h3>
           <div className="overflow-x-auto">
-            <table className="min-w-full text-xs border">
+            <table className="min-w-full text-xs border rounded-xl">
               <thead>
-                <tr>
+                <tr className="bg-primary/10 text-primary">
                   <th className="border px-2 py-1">First Name</th>
                   <th className="border px-2 py-1">Last Name</th>
                   <th className="border px-2 py-1">Email</th>
@@ -147,7 +150,7 @@ const LeadUploadForm: React.FC<LeadUploadFormProps> = ({ onLeadsParsed = () => {
               </thead>
               <tbody>
                 {leads.slice(0, 10).map((lead, i) => (
-                  <tr key={i}>
+                  <tr key={i} className="even:bg-gray-50">
                     <td className="border px-2 py-1">{lead.firstName}</td>
                     <td className="border px-2 py-1">{lead.lastName}</td>
                     <td className="border px-2 py-1">{lead.email}</td>
@@ -165,7 +168,7 @@ const LeadUploadForm: React.FC<LeadUploadFormProps> = ({ onLeadsParsed = () => {
             {leads.length > 10 && <p className="text-xs mt-1">Showing first 10 leads...</p>}
           </div>
           <button
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+            className="mt-4 px-6 py-2 bg-gradient-primary text-white font-semibold rounded-button shadow-button transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50"
             onClick={handleUpload}
             disabled={uploading || leads.length === 0}
           >
@@ -174,14 +177,14 @@ const LeadUploadForm: React.FC<LeadUploadFormProps> = ({ onLeadsParsed = () => {
           {uploading && (
             <div className="w-full bg-gray-200 rounded mt-2 h-2">
               <div
-                className="bg-blue-500 h-2 rounded"
+                className="bg-primary h-2 rounded"
                 style={{ width: `${progress}%`, transition: 'width 0.2s' }}
               ></div>
             </div>
           )}
         </div>
       )}
-      {uploadResult && <div className={`mt-2 ${uploadResult.includes('failed') ? 'text-red-600' : 'text-green-600'}`}>{uploadResult}</div>}
+      {uploadResult && <div className={`mt-2 ${uploadResult.includes('failed') ? 'text-red-600' : 'text-green-600'} font-medium`}>{uploadResult}</div>}
     </div>
   );
 };

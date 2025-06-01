@@ -118,7 +118,16 @@ A Next.js 15.3 + React 19 dashboard for uploading, qualifying, syncing, and anal
 **Lead CSV Example:**
 ```csv
 firstName,lastName,email,company,title,phone,website,industry,companySize,location
-John,Doe,john@company.com,Company Inc.,CTO,1234567890,www.company.com,Tech,100,NY
+John,Doe,john.doe@example.com,Acme Corp,CTO,1234567890,www.acme.com,Technology,100,New York
+Jane,Smith,jane.smith@example.com,Globex Inc,CEO,2345678901,www.globex.com,Finance,200,San Francisco
+Alice,Johnson,alice.johnson@example.com,Initech,Product Manager,3456789012,www.initech.com,Software,150,Austin
+Bob,Williams,bob.williams@example.com,Stark Industries,Engineer,4567890123,www.stark.com,Manufacturing,500,Los Angeles
+Carol,Brown,carol.brown@example.com,Wayne Enterprises,Marketing Lead,5678901234,www.wayne.com,Marketing,300,Gotham
+David,Jones,david.jones@example.com,Wonka Factory,Operations,6789012345,www.wonka.com,Food,80,Chicago
+Emily,Miller,emily.miller@example.com,Oscorp,Scientist,7890123456,www.oscorp.com,Biotech,120,Boston
+Frank,Garcia,frank.garcia@example.com,Tyrell Corp,Analyst,8901234567,www.tyrell.com,Analytics,60,Seattle
+Grace,Martinez,grace.martinez@example.com,Bluth Company,HR Manager,9012345678,www.bluth.com,Real Estate,40,Miami
+Henry,Lee,henry.lee@example.com,Paper Co,Sales Lead,1230984567,www.paperco.com,Sales,30,Scranton
 ```
 
 ---
@@ -157,4 +166,38 @@ John,Doe,john@company.com,Company Inc.,CTO,1234567890,www.company.com,Tech,100,N
 
 ---
 
-**Keep this document updated as the project progresses. Feed it back to the AI for context at any time.** 
+**Keep this document updated as the project progresses. Feed it back to the AI for context at any time.**
+
+---
+
+## 10. Handover Documentation
+
+### Project Overview
+- This project is a Next.js 15.3 + React 19 dashboard for uploading, qualifying, syncing, and analyzing outbound leads using AI and HubSpot CRM.
+
+### Repository
+- GitHub: https://github.com/AleemBajwa/atfhubspot
+
+### Deployment
+- Deployed via Vercel, connected to the above GitHub repository.
+- Every push to the `main` branch will auto-deploy to Vercel.
+
+### Environment Variables
+- Set all API keys (e.g., `HUBSPOT_API_KEY`, `OPENAI_API_KEY`, `SERPER_API_KEY`) in the Vercel dashboard under Project Settings > Environment Variables.
+- No API keys are hardcoded in the codebase.
+
+### Usage
+- Upload leads using the provided sample CSV format.
+- Qualify leads and sync qualified leads to HubSpot.
+- View real-time analytics on the dashboard.
+
+### Maintenance
+- To update the app, push changes to the GitHub repository.
+- To add/change API keys, update them in Vercel and redeploy.
+- For local development, use a `.env.local` file with the same variable names as in Vercel.
+
+### Support
+- For any issues, check the README and this manual.
+- For further help, contact the original developer or your technical team.
+
+--- 

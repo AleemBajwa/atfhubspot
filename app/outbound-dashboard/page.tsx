@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
-import LeadUploadForm from "../components/LeadUploadForm2";
-import LeadQualificationAgent from "../components/LeadQualificationAgent";
-import HubSpotIntegration from "../components/HubSpotIntegration";
-import AnalyticsDashboard from "../components/AnalyticsDashboard";
-import type { Lead, QualifiedLead } from "../components/types";
+import React, { useState } from 'react';
+import LeadUploadForm from '../../components/LeadUploadForm2';
+import LeadQualificationAgent from '../../components/LeadQualificationAgent';
+import HubSpotIntegration from '../../components/HubSpotIntegration';
+import AnalyticsDashboard from '../../components/AnalyticsDashboard';
+import type { Lead, QualifiedLead } from '../../components/types';
 
-export default function Home() {
+export default function OutboundDashboardPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [qualifiedLeads, setQualifiedLeads] = useState<QualifiedLead[]>([]);
 
@@ -27,4 +27,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
+} 

@@ -1,0 +1,11 @@
+firstName,lastName,email,company,title,phone,website,industry,companySize,location
+John,Doe,john.doe@example.com,Acme Corp,CTO,1234567890,www.acme.com,Technology,100,New York
+Jane,Smith,jane.smith@example.com,Globex Inc,CEO,2345678901,www.globex.com,Finance,200,San Francisco
+Alice,Johnson,alice.johnson@example.com,Initech,Product Manager,3456789012,www.initech.com,Software,150,Austin
+Bob,Williams,bob.williams@example.com,Stark Industries,Engineer,4567890123,www.stark.com,Manufacturing,500,Los Angeles
+Carol,Brown,carol.brown@example.com,Wayne Enterprises,Marketing Lead,5678901234,www.wayne.com,Marketing,300,Gotham
+David,Jones,david.jones@example.com,Wonka Factory,Operations,6789012345,www.wonka.com,Food,80,Chicago
+Emily,Miller,emily.miller@example.com,Oscorp,Scientist,7890123456,www.oscorp.com,Biotech,120,Boston
+Frank,Garcia,frank.garcia@example.com,Tyrell Corp,Analyst,8901234567,www.tyrell.com,Analytics,60,Seattle
+Grace,Martinez,grace.martinez@example.com,Bluth Company,HR Manager,9012345678,www.bluth.com,Real Estate,40,Miami
+Henry,Lee,henry.lee@example.com,Paper Co,Sales Lead,1230984567,www.paperco.com,Sales,30,Scranton
