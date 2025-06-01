@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
+import { FiUpload, FiFile, FiX, FiTrash2, FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
 import type { Lead } from './types';
 
 const MAX_LEADS = 1000;
@@ -88,7 +89,6 @@ const LeadUploadForm: React.FC<LeadUploadFormProps> = ({ onLeadsParsed = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ leads }),
       });
-      // Simulate progress for UX
       let prog = 0;
       const interval = setInterval(() => {
         prog += 20;
@@ -107,84 +107,99 @@ const LeadUploadForm: React.FC<LeadUploadFormProps> = ({ onLeadsParsed = () => {
   };
 
   return (
-    <div className="bg-card rounded-card shadow-card p-6 md:p-8 space-y-6">
-      <div
-        {...getRootProps()}
-        className="border-2 border-dashed border-primary/30 rounded-xl p-8 text-center cursor-pointer bg-background hover:border-primary transition-colors duration-200"
-      >
+    <div className="relative bg-gradient-to-br from-white to-[#f5f7fa] rounded-2xl shadow-soft border-t-4 border-[#00b8ff] p-8 transition-all duration-300">
+      <div {...getRootProps()} className={`relative flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-8 mb-6 transition-all duration-200 cursor-pointer w-full bg-[#f8fafc] hover:shadow-lg hover:border-[#00b8ff] ${isDragActive ? 'border-[#00b8ff] bg-[#e6f7ff] shadow-lg' : 'border-gray-200'}`}
+        style={{ minHeight: 180 }}>
         <input {...getInputProps()} />
-        {isDragActive ? (
-          <p className="text-primary font-semibold">Drop the CSV file here ...</p>
-        ) : (
-          <p className="text-gray-700">Drag & drop a CSV file here, or <span className="text-primary underline">click to select</span></p>
-        )}
-        {fileName && <p className="mt-2 text-sm text-gray-500">Selected file: {fileName}</p>}
+        <FiUpload className="w-16 h-16 text-[#e6f7ff] absolute opacity-20 pointer-events-none" style={{ top: 20, left: '50%', transform: 'translateX(-50%)' }} />
+        <FiUpload className="w-10 h-10 text-[#00b8ff] mb-2 z-10" />
+        <p className="text-[#1a2b49] text-xl mb-1 font-extrabold z-10">Drag & drop your CSV file here, or <span className="text-[#00b8ff] underline">browse</span></p>
+        <p className="text-sm text-gray-400 z-10">Maximum file size: {MAX_FILE_SIZE_MB}MB • Maximum leads: {MAX_LEADS}</p>
       </div>
-      {errors.length > 0 && (
-        <div className="text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
-          <ul className="text-left text-sm space-y-1">
-            {errors.map((err, i) => (
-              <li key={i}>{err}</li>
-            ))}
-          </ul>
+      {fileName && (
+        <div className="flex items-center gap-2 mb-4 bg-[#e6f7ff] text-[#1a2b49] px-4 py-2 rounded-full w-fit mx-auto shadow-sm text-sm font-semibold">
+          <FiFile className="w-4 h-4 text-[#00b8ff]" />
+          <span>{fileName}</span>
+          <button onClick={() => { setFileName(null); setLeads([]); setErrors([]); setUploadResult(null); }} className="ml-2 hover:text-[#00b8ff]" title="Remove file">
+            <FiX className="w-4 h-4" />
+          </button>
         </div>
       )}
+      {errors.length > 0 && (
+        <ul className="mb-4 flex flex-col gap-1 items-center">
+          {errors.map((err, i) => (
+            <li key={i} className="inline-flex items-center gap-2 bg-red-50 text-red-600 px-3 py-1 rounded-full text-xs font-medium border border-red-100"><FiAlertCircle className="w-4 h-4" />{err}</li>
+          ))}
+        </ul>
+      )}
       {leads.length > 0 && (
-        <div className="bg-background rounded-xl shadow-card p-4">
-          <h3 className="font-semibold mb-2 text-lg text-primary">CSV Preview ({leads.length} leads)</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-xs border rounded-xl">
-              <thead>
-                <tr className="bg-primary/10 text-primary">
-                  <th className="border px-2 py-1">First Name</th>
-                  <th className="border px-2 py-1">Last Name</th>
-                  <th className="border px-2 py-1">Email</th>
-                  <th className="border px-2 py-1">Company</th>
-                  <th className="border px-2 py-1">Title</th>
-                  <th className="border px-2 py-1">Phone</th>
-                  <th className="border px-2 py-1">Website</th>
-                  <th className="border px-2 py-1">Industry</th>
-                  <th className="border px-2 py-1">Company Size</th>
-                  <th className="border px-2 py-1">Location</th>
+        <div className="mt-4 animate-fade-in">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-xl font-extrabold text-[#1a2b49]">CSV Preview</h3>
+            <button onClick={() => { setLeads([]); setFileName(null); setErrors([]); setUploadResult(null); }} className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-[#e6f7ff] hover:bg-[#00b8ff] hover:text-white text-[#1a2b49] rounded-full transition" title="Clear">
+              <FiTrash2 className="w-4 h-4" />Clear
+            </button>
+          </div>
+          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-soft">
+            <table className="min-w-full divide-y divide-gray-200 text-sm rounded-xl overflow-hidden">
+              <thead className="bg-[#e6f7ff]">
+                <tr>
+                  {['First Name', 'Last Name', 'Email', 'Company', 'Title', 'Phone', 'Website', 'Industry', 'Company Size', 'Location'].map((header) => (
+                    <th key={header} className="px-4 py-2 text-left font-bold text-[#1a2b49] uppercase tracking-wider whitespace-nowrap">{header}</th>
+                  ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-100">
                 {leads.slice(0, 10).map((lead, i) => (
-                  <tr key={i} className="even:bg-gray-50">
-                    <td className="border px-2 py-1">{lead.firstName}</td>
-                    <td className="border px-2 py-1">{lead.lastName}</td>
-                    <td className="border px-2 py-1">{lead.email}</td>
-                    <td className="border px-2 py-1">{lead.company}</td>
-                    <td className="border px-2 py-1">{lead.title}</td>
-                    <td className="border px-2 py-1">{lead.phone || '-'}</td>
-                    <td className="border px-2 py-1">{lead.website || '-'}</td>
-                    <td className="border px-2 py-1">{lead.industry || '-'}</td>
-                    <td className="border px-2 py-1">{lead.companySize || '-'}</td>
-                    <td className="border px-2 py-1">{lead.location || '-'}</td>
+                  <tr key={i} className={i % 2 === 0 ? 'bg-[#f8fafc]' : ''}>
+                    <td className="px-4 py-2 whitespace-nowrap">{lead.firstName}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{lead.lastName}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{lead.email}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{lead.company}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{lead.title}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{lead.phone || '-'}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{lead.website || '-'}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{lead.industry || '-'}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{lead.companySize || '-'}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{lead.location || '-'}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            {leads.length > 10 && <p className="text-xs mt-1">Showing first 10 leads...</p>}
           </div>
-          <button
-            className="mt-4 px-6 py-2 bg-gradient-primary text-white font-semibold rounded-button shadow-button transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50"
-            onClick={handleUpload}
-            disabled={uploading || leads.length === 0}
-          >
-            {uploading ? 'Uploading...' : 'Upload Leads'}
-          </button>
+          {leads.length > 10 && <p className="text-xs text-gray-400 mt-1">Showing first 10 of {leads.length} leads</p>}
+          <div className="flex justify-end mt-4">
+            <button
+              onClick={handleUpload}
+              disabled={uploading || leads.length === 0}
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#00b8ff] text-white font-bold rounded-lg shadow hover:bg-[#0099cc] transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {uploading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <FiUpload className="w-4 h-4" />
+                  Upload {leads.length} Leads
+                </>
+              )}
+            </button>
+          </div>
           {uploading && (
-            <div className="w-full bg-gray-200 rounded mt-2 h-2">
-              <div
-                className="bg-primary h-2 rounded"
-                style={{ width: `${progress}%`, transition: 'width 0.2s' }}
-              ></div>
+            <div className="w-full bg-gray-100 rounded mt-2 h-2">
+              <div className="bg-[#00b8ff] h-2 rounded" style={{ width: `${progress}%`, transition: 'width 0.2s' }}></div>
+            </div>
+          )}
+          {uploadResult && (
+            <div className={`mt-4 p-4 rounded-lg flex items-center gap-2 ${uploadResult.includes('failed') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
+              {uploadResult.includes('failed') ? <FiAlertCircle className="w-5 h-5" /> : <FiCheckCircle className="w-5 h-5" />}
+              <span className="font-medium">{uploadResult}</span>
             </div>
           )}
         </div>
       )}
-      {uploadResult && <div className={`mt-2 ${uploadResult.includes('failed') ? 'text-red-600' : 'text-green-600'} font-medium`}>{uploadResult}</div>}
     </div>
   );
 };
