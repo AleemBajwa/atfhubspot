@@ -1,0 +1,3 @@
+firstName,lastName,email,company,title,industry,companySize,location
+John,Smith,john.smith@microsoft.com,Microsoft,Senior Software Engineer,Technology,Enterprise,Seattle
+Sarah,Johnson,sarah.j@stripe.com,Stripe,VP of Engineering,FinTech,Enterprise,San Francisco 

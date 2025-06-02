@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { FiRefreshCw, FiTrendingUp, FiMail, FiMousePointer, FiMessageSquare, FiCheckCircle, FiDollarSign, FiUsers, FiArrowUp, FiArrowDown, FiAlertCircle } from 'react-icons/fi';
+import { FiRefreshCw, FiTrendingUp, FiMail, FiMousePointer, FiMessageSquare, FiCheckCircle, FiDollarSign, FiUsers, FiArrowUp, FiArrowDown, FiAlertCircle, FiInfo } from 'react-icons/fi';
 
 interface AnalyticsData {
-  emailDeliveryRate: number;
-  openRate: number;
-  clickThroughRate: number;
-  responseRate: number;
+  emailAnalyticsAvailable?: boolean;
+  emailAnalyticsMessage?: string;
+  emailDeliveryRate: number | null;
+  openRate: number | null;
+  clickThroughRate: number | null;
+  responseRate: number | null;
   qualificationSuccessRate: number;
   campaignROI: number;
   conversionRate: number;
+  totalContacts?: number;
+  qualifiedContacts?: number;
+  totalDeals?: number;
+  wonDeals?: number;
+  totalDealValue?: number;
+  marketingSpend?: number;
+  totalWorkflows?: number | null;
+  lastUpdated?: string;
 }
 
 const metrics = [
@@ -20,6 +30,7 @@ const metrics = [
     description: 'Emails successfully delivered',
     trend: 2.5,
     accent: 'bg-[#00b8ff]',
+    emailMetric: true,
   },
   {
     key: 'openRate',
@@ -29,6 +40,7 @@ const metrics = [
     description: 'Delivered emails opened',
     trend: 1.8,
     accent: 'bg-[#1a2b49]',
+    emailMetric: true,
   },
   {
     key: 'clickThroughRate',
@@ -38,6 +50,7 @@ const metrics = [
     description: 'Opens that resulted in clicks',
     trend: -0.5,
     accent: 'bg-[#00b8ff]',
+    emailMetric: true,
   },
   {
     key: 'responseRate',
@@ -47,6 +60,7 @@ const metrics = [
     description: 'Leads who responded',
     trend: 3.2,
     accent: 'bg-[#1a2b49]',
+    emailMetric: true,
   },
   {
     key: 'qualificationSuccessRate',
@@ -56,6 +70,7 @@ const metrics = [
     description: 'Leads meeting qualification',
     trend: 1.2,
     accent: 'bg-[#00b8ff]',
+    emailMetric: false,
   },
   {
     key: 'campaignROI',
@@ -65,6 +80,7 @@ const metrics = [
     description: 'Return on investment',
     trend: 5.4,
     accent: 'bg-[#1a2b49]',
+    emailMetric: false,
   },
   {
     key: 'conversionRate',
@@ -74,18 +90,19 @@ const metrics = [
     description: 'Leads converted to opportunities',
     trend: 2.1,
     accent: 'bg-[#00b8ff]',
+    emailMetric: false,
   },
 ];
 
-const MetricCard = ({ title, value, icon, suffix, description, trend, accent }: any) => (
-  <div className="relative group bg-white rounded-2xl shadow-soft border border-gray-100 p-6 flex flex-col gap-2 min-h-[170px] h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover cursor-pointer">
+const MetricCard = ({ title, value, icon, suffix, description, trend, accent, disabled }: any) => (
+  <div className={`relative group bg-white rounded-2xl shadow-soft border border-gray-100 p-6 flex flex-col gap-2 min-h-[170px] h-full transition-all duration-300 ${disabled ? 'opacity-50 pointer-events-none' : 'hover:-translate-y-1 hover:shadow-card-hover cursor-pointer'}`}>
     <span className={`absolute left-0 top-6 h-8 w-1.5 rounded-full ${accent} group-hover:scale-y-110 transition-transform`} />
     <div className="flex items-center gap-3 mb-2">
       <div className={`p-2 rounded-full ${accent} bg-opacity-10 text-[#00b8ff] group-hover:bg-opacity-20 transition-all`}>{icon}</div>
       <span className="text-lg font-bold text-gray-900">{title}</span>
     </div>
     <div className="flex items-end gap-2">
-      <span className="text-4xl font-extrabold text-[#1a2b49]">{value}{suffix}</span>
+      <span className="text-4xl font-extrabold text-[#1a2b49]">{value !== null && value !== undefined ? value : '--'}{suffix}</span>
       {trend !== undefined && (
         <span className={`flex items-center text-sm font-semibold ${trend >= 0 ? 'text-green-600' : 'text-red-600'}`}> 
           {trend >= 0 ? <FiArrowUp className="w-4 h-4 mr-0.5" /> : <FiArrowDown className="w-4 h-4 mr-0.5" />} 
@@ -151,20 +168,34 @@ const AnalyticsDashboard: React.FC = () => {
           </div>
         )}
         {analytics && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {metrics.map((m) => (
-              <MetricCard
-                key={m.key}
-                title={m.title}
-                value={analytics[m.key as keyof AnalyticsData]}
-                icon={m.icon}
-                suffix={m.suffix}
-                description={m.description}
-                trend={m.trend}
-                accent={m.accent}
-              />
-            ))}
-          </div>
+          <>
+            {/* Show info message if email analytics are unavailable */}
+            {analytics.emailAnalyticsAvailable === false && analytics.emailAnalyticsMessage && (
+              <div className="flex items-center bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+                <FiInfo className="w-6 h-6 text-blue-500 mr-2" />
+                <span className="text-blue-700 font-semibold">{analytics.emailAnalyticsMessage}</span>
+              </div>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {metrics.filter(m => {
+                // Hide email metrics if not available
+                if (m.emailMetric && analytics.emailAnalyticsAvailable === false) return false;
+                return true;
+              }).map((m) => (
+                <MetricCard
+                  key={m.key}
+                  title={m.title}
+                  value={analytics[m.key as keyof AnalyticsData]}
+                  icon={m.icon}
+                  suffix={m.suffix}
+                  description={m.description}
+                  trend={m.trend}
+                  accent={m.accent}
+                  disabled={m.emailMetric && analytics.emailAnalyticsAvailable === false}
+                />
+              ))}
+            </div>
+          </>
         )}
         {lastUpdated && (
           <div className="flex justify-end mt-6 text-xs text-gray-400">
